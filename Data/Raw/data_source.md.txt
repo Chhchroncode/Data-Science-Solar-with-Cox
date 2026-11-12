@@ -1,0 +1,4 @@
+Data Source: REPD Quarterly Extract July 2026
+Publisher: Department for Energy Security and Net Zero
+File:REPD_Publication_Q2_2026
+Note: Extracted on November 2026 by Open Government Licence (public sector info)

@@ -1,6 +1,9 @@
 library(tidyverse)
 library(here)
 library(survival)
+library(ggsurvfit)
+library(ggplot2)
+library(gtsummary)
 
 solar <- read_csv(here("Data", "Cleaned", "cleaned_solar_data.csv"),
                  col_types = cols(ref_id = col_character(),
@@ -25,6 +28,7 @@ solar$storage_colocated <- as.logical(solar$storage_colocated)
 solar$reapplying        <- as.logical(solar$reapplying)
 solar$inactive_flag     <- as.logical(solar$inactive_flag)
 
+  
 unique(solar$storage_colocated)
 unique(solar$reapplying)
 unique(solar$inactive_flag)
@@ -53,3 +57,17 @@ levels(solar$route_scale)
 #Outcome coding
 outcome_levels <- c("Pending", "Planning Permission Granted",
                     "Planning Permission Refused", "Planning Application Withdrawn")
+
+solar <- solar |>
+  mutate(outcome_first = factor(outcome_first, levels = outcome_levels),
+         outcome_final = factor(outcome_final, levels = outcome_levels),
+stopifnot(!anyNA(solar$outcome_first), !anyNA(solar$outcome_final)))
+
+table(solar$outcome_first)
+table(solar$outcome_final)
+
+#Descriptive of outcomes
+solar|>
+  select(outcome_first,country,capacity_mw,route_scale)|>
+  tbl_summary(by=outcome_first)|>
+  add_overall()

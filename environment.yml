@@ -1,0 +1,11 @@
+name: solar-cox
+channels:
+  - defaults
+dependencies:
+  - jupyterlab
+  - pytest
+  - matplotlib
+  - pandas
+  - python=3.12
+  - requests
+prefix: C:\Users\cochi\anaconda3\envs\solar-cox

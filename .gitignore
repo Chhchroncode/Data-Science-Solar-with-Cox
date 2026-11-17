@@ -178,3 +178,5 @@ cython_debug/
 .Rhistory
 .RData
 .Ruserdata
+.virtual_documents/
+anaconda_projects/

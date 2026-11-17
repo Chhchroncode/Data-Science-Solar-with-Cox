@@ -182,3 +182,4 @@ tbl_merge(list(tbl_regression(cox_first2, exponentiate = TRUE),
 tbl_merge(list(tbl_regression(cox_final2, exponentiate = TRUE),
                tbl_regression(cox_final2_active, exponentiate = TRUE)),
           tab_spanner = c("**All applications**", "**Inactive excluded**"))
+renv::snapshot()

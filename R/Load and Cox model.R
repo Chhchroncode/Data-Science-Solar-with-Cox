@@ -61,8 +61,8 @@ outcome_levels <- c("Pending", "Planning Permission Granted",
 
 solar <- solar |>
   mutate(outcome_first = factor(outcome_first, levels = outcome_levels),
-         outcome_final = factor(outcome_final, levels = outcome_levels),
-stopifnot(!anyNA(solar$outcome_first), !anyNA(solar$outcome_final)))
+         outcome_final = factor(outcome_final, levels = outcome_levels))
+stopifnot(!anyNA(solar$outcome_first), !anyNA(solar$outcome_final))
 
 table(solar$outcome_first)
 table(solar$outcome_final)
@@ -75,8 +75,7 @@ solar|>
 
 #DATA EXPLORATION
 #Kaplan Meier Plot using first decision
-km_first<-survfit2(Surv(time_first_days,event_first)~1,data=solar)
-plot(km_first)
+
 #Using week as unit for time, and grouping all events together
 #First decision
 km_first_week<-survfit2(Surv(time_first_days/7,event_first>0)~1,data=solar)
@@ -86,7 +85,7 @@ km_first_week_plot<-ggsurvfit(km_first_week,type='risk')+
   add_confidence_interval()+
   add_risktable()+
   labs(x='Weeks since application submitted',
-       y='share of projects has received first decision')
+       y='share no longer awaiting a first decision')
 km_first_week_plot
 ggsave(here("Outputs", "Figures", "km_first_decision.png"), km_first_week_plot, width = 5, height = 5)
 
@@ -99,7 +98,7 @@ km_latest_week_plot<-ggsurvfit(km_latest_week,type='risk')+
   add_confidence_interval()+
   add_risktable()+
   labs(x='Weeks since application submitted',
-       y='share of projects has received latest decision')
+       y='share no longer awaiting a final outcome')
 km_latest_week_plot
 ggsave(here("Outputs", "Figures", "km_latest_decision.png"), km_latest_week_plot, width = 5, height = 5)
 
@@ -143,8 +142,8 @@ tbl_cuminc(cif_final,time=c(12,24),outcomes = outcomes_all)
 cox_first1<-coxph(Surv(time_first_days,event_first==1)~log_capacity_mw+storage_colocated+decision_route,data=solar,cluster=lpa)
 summary(cox_first1)
 #Concordance good
-#Wide CI and especially low p-value for storage, noted that there are only 17 projects that are TRUE, drop storage variable
-#Wide CI and especially low p-value for scotland session 26, noted low number of projects in some decision routes, use country and route_scale instead
+# for storage, noted that there are only 17 projects that are TRUE, drop storage variable
+#for scotland session 26, noted low number of projects in some decision routes, use country and route_scale instead
 #Trial 2
 cox_first2<-coxph(Surv(time_first_days,event_first==1)~log_capacity_mw+route_scale+country,data=solar,cluster=lpa)
 summary(cox_first2)
@@ -154,7 +153,7 @@ summary(cox_first2)
 cox_final1<-coxph(Surv(time_final_days,event_final==1)~log_capacity_mw+storage_colocated+decision_route,data=solar,cluster=lpa)
 summary(cox_final1)
 
-cox_final2<-coxph(Surv(time_first_days,event_final==1)~log_capacity_mw+route_scale+country,data=solar,cluster=lpa)
+cox_final2<-coxph(Surv(time_final_days,event_final==1)~log_capacity_mw+route_scale+country,data=solar,cluster=lpa)
 summary(cox_final2)
 
 glimpse(solar)
@@ -173,7 +172,7 @@ plot(ph_final)
 cox_first2_active<-coxph(Surv(time_first_days,event_first==1)~log_capacity_mw+route_scale+country,data=filter(solar,!inactive_flag),cluster=lpa)
 summary(cox_first2_active)
 
-cox_final2_active<-coxph(Surv(time_first_days,event_final==1)~log_capacity_mw+route_scale+country,data=filter(solar,!inactive_flag),cluster=lpa)
+cox_final2_active<-coxph(Surv(time_final_days,event_final==1)~log_capacity_mw+route_scale+country,data=filter(solar,!inactive_flag),cluster=lpa)
 summary(cox_final2_active)
 
 #No large difference in p value, and HR after dropping inactive projects

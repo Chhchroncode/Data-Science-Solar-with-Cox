@@ -5,7 +5,7 @@ dependencies:
   - jupyterlab
   - pytest
   - matplotlib
+  - seaborn
   - pandas
   - python=3.12
   - requests
-prefix: C:\Users\cochi\anaconda3\envs\solar-cox
